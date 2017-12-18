@@ -1,6 +1,6 @@
-const path = require('path')
-const webpack = require('webpack')
-const ExtractCssChunks = require('extract-css-chunks-webpack-plugin')
+const path = require('path');
+const webpack = require('webpack');
+const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
 
 module.exports = {
   // REQUIRED: webpackHotServerMiddleware is expecting two webpack configs,
@@ -13,19 +13,23 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: 'babel-loader'
+        use: 'babel-loader',
       },
       {
         test: /\.css$/,
         // REQUIRED: Extract css files into their own chunks
         use: ExtractCssChunks.extract({
-          use: 'css-loader'
-        })
-      }
-    ]
+          use: 'css-loader',
+        }),
+      },
+    ],
   },
   devtool: 'eval',
-  entry: path.resolve(__dirname, '../src/index.js'),
+  entry: [
+    'webpack-hot-middleware/client',
+    'react-hot-loader/patch',
+    path.resolve(__dirname, '../src/index.js'),
+  ],
   output: {
     // REQUIRED: file and chunk names should match
     filename: '[name].js',
@@ -33,7 +37,7 @@ module.exports = {
     // REQUIRED: where to write files to
     path: path.resolve(__dirname, '../buildClient'),
     // REQUIRED: where files will be served from
-    publicPath: '/static/'
+    publicPath: '/static/',
   },
   plugins: [
     // REQUIRED: We have to initialize our ExtractCssChunks plugin
@@ -43,7 +47,13 @@ module.exports = {
     new webpack.optimize.CommonsChunkPlugin({
       names: ['bootstrap'],
       filename: '[name].js',
-      minChunks: Infinity
+      minChunks: Infinity,
     }),
-  ]
-}
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('development'),
+      },
+    }),
+  ],
+};

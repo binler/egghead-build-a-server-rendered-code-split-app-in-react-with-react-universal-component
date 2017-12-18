@@ -1,5 +1,5 @@
-const path = require('path')
-const webpack = require('webpack')
+const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   // REQUIRED: webpackHotServerMiddleware is expecting two webpack configs,
@@ -13,21 +13,31 @@ module.exports = {
   output: {
     // REQUIRED: Makes sure to expose ../server/render.js middleware on
     // module.exports so that webpackHotServerMiddleware can call it.
-    libraryTarget: 'commonjs2'
+    libraryTarget: 'commonjs2',
   },
   module: {
     rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: 'babel-loader'
+        use: 'babel-loader',
       },
       {
         test: /\.css$/,
         exclude: /node_modules/,
         // REQUIRED: server specific version of css-loader
-        use: 'css-loader/locals'
-      }
-    ]
-  }
-}
+        use: 'css-loader/locals',
+      },
+    ],
+  },
+  plugins: [
+    new webpack.optimize.LimitChunkCountPlugin({
+      maxChunks: 1,
+    }),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('development'),
+      },
+    }),
+  ],
+};
