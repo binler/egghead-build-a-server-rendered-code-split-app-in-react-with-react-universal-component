@@ -1,13 +1,19 @@
 import React from 'react'
 import './App.css';
-const HomeTab = () => <div>Home</div>;
-const FooTab = () => <div>Foo</div>;
-const BarTab = () => <div>Bar</div>;
+import universal from 'react-universal-component';
+
+// import HomeTab from './Home'
+// import FooTab from './Foo'
+// import BarTab from './Bar'
+/* Now, with lazy loading: */
+const HomeTab = universal(import('./Home.js'))
+const FooTab = universal(import('./Foo.js'))
+const BarTab = universal(import('./Bar.js'))
 
 export default class App extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { selected: 'Home' }
+    this.state = { selected: 'Foo' }
   }
 
   render() {
