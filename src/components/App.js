@@ -6,9 +6,11 @@ import universal from 'react-universal-component';
 // import FooTab from './Foo'
 // import BarTab from './Bar'
 /* Now, with lazy loading: */
-const HomeTab = universal(import('./Home.js'))
-const FooTab = universal(import('./Foo.js'))
-const BarTab = universal(import('./Bar.js'))
+// const HomeTab = universal(import('./Home.js'))
+// const FooTab = universal(import('./Foo.js'))
+// const BarTab = universal(import('./Bar.js'))
+/* Now with a dynamic one */
+const UniversalTab = universal(props => import(`./${props.tab}`))
 
 export default class App extends React.Component {
   constructor(props) {
@@ -19,12 +21,14 @@ export default class App extends React.Component {
   render() {
     return (
       <div>
-        { this.state.selected === 'Home' &&
-          <HomeTab /> }
-        { this.state.selected === 'Foo' &&
-          <FooTab /> }
-        { this.state.selected === 'Bar' &&
-          <BarTab /> }
+        {/* Hardcoded "routes" */}
+        {/* this.state.selected === 'Home' &&
+          <HomeTab /> */}
+        {/* this.state.selected === 'Foo' &&
+          <FooTab /> */}
+        {/* this.state.selected === 'Bar' &&
+          <BarTab /> */}
+        <UniversalTab tab={this.state.selected} />
 
         <button onClick={ () => this.setState({ selected: 'Home' }) }>
           Home
