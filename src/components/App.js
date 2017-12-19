@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import './App.css';
 import universal from 'react-universal-component';
 
@@ -13,14 +13,18 @@ import universal from 'react-universal-component';
 const UniversalTab = universal(props => import(`./${props.tab}`), {
   minDelay: 750,
   loading: <div>Carregando carai...</div>,
-  loadingTransition: false, // do not show the loading
-})
+  // loadingTransition: false, // do not show the loading
+  alwaysDelay: true, // force the delay, can do CSS transitions
+});
 
 export default class App extends React.Component {
   constructor(props) {
-    super(props)
-    this.state = { selected: 'Foo' }
+    super(props);
+    this.state = { selected: 'Foo', loading: false };
   }
+
+  loadStart = () => this.setState({ loading: true });
+  loadEnd = () => this.setState({ loading: false });
 
   render() {
     return (
@@ -35,19 +39,22 @@ export default class App extends React.Component {
         {/* <UniversalTab
           tab={this.state.selected}
           isLoading={true} /> // force the loading*/}
-        <UniversalTab
-          tab={this.state.selected}/>
 
-        <button onClick={ () => this.setState({ selected: 'Home' }) }>
+        {this.state.loading && <p>My custom loading...</p>}
+        <div className={this.state.loading ? 'loading' : ''} >
+          <UniversalTab
+            tab={this.state.selected}
+            onBefore={this.loadStart}
+            onAfter={this.loadEnd}
+          />
+        </div>
+
+        <button onClick={() => this.setState({ selected: 'Home' })}>
           Home
         </button>
-        <button onClick={ () => this.setState({ selected: 'Foo' }) }>
-          Foo
-        </button>
-        <button onClick={ () => this.setState({ selected: 'Bar' }) }>
-          Bar
-        </button>
+        <button onClick={() => this.setState({ selected: 'Foo' })}>Foo</button>
+        <button onClick={() => this.setState({ selected: 'Bar' })}>Bar</button>
       </div>
-    )
+    );
   }
 }
