@@ -11,11 +11,20 @@ import universal from 'react-universal-component';
 // const BarTab = universal(import('./Bar.js'))
 /* Now with a dynamic one */
 const UniversalTab = universal(props => import(`./${props.tab}`), {
-  minDelay: 750,
-  loading: <div>Carregando carai...</div>,
+  // minDelay: 750,
+  // loading: <div>Carregando carai...</div>,
   // loadingTransition: false, // do not show the loading
-  alwaysDelay: true, // force the delay, can do CSS transitions
+  // alwaysDelay: true, // force the delay, can do CSS transitions
 });
+
+/*
+The default behavior of the import is to get the default import. You can override this this way: @see Foo.js
+const FooTab = universal(import('./Foo'), { key: 'Foo' })
+or in this way:
+const FooTab = universal(import('./Foo'), { key: (module) => module.Foo })
+const FooTab = universal(import('./Foo'), { key: ({ Foo }) => Foo })
+ */
+
 
 export default class App extends React.Component {
   constructor(props) {
