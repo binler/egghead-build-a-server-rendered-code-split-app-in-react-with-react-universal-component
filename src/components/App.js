@@ -20,7 +20,18 @@ const UniversalTab = universal(props => import(`./${props.tab}`), {
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { selected: 'Foo', loading: false };
+    this.state = { selected: 'Home', loading: false };
+  }
+
+  componentDidMount() {
+    /*
+    Antecipar ação do usuário e fazer um préload
+   */
+    // UniversalTab.preload({ tab: 'Foo' })
+    /* Pode ser bom para mostrar a primeira página rapidão e depois carregar os links */
+    setTimeout(() => UniversalTab.preload({ tab: 'Foo' }), 500);
+    /* Outra tática boa é carregar no hover de um Link, aproveitando o interesse
+    do usuário em clicar alí */
   }
 
   loadStart = () => this.setState({ loading: true });
@@ -41,7 +52,7 @@ export default class App extends React.Component {
           isLoading={true} /> // force the loading*/}
 
         {this.state.loading && <p>My custom loading...</p>}
-        <div className={this.state.loading ? 'loading' : ''} >
+        <div className={this.state.loading ? 'loading' : ''}>
           <UniversalTab
             tab={this.state.selected}
             onBefore={this.loadStart}
@@ -53,7 +64,11 @@ export default class App extends React.Component {
           Home
         </button>
         <button onClick={() => this.setState({ selected: 'Foo' })}>Foo</button>
-        <button onClick={() => this.setState({ selected: 'Bar' })}>Bar</button>
+        <button
+          onClick={() => this.setState({ selected: 'Bar' })}
+          onMouseEnter={e => UniversalTab.preload({ tab: 'Bar' })}>
+          Bar
+        </button>
       </div>
     );
   }
