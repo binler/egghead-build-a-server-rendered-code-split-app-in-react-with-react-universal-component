@@ -10,7 +10,11 @@ import universal from 'react-universal-component';
 // const FooTab = universal(import('./Foo.js'))
 // const BarTab = universal(import('./Bar.js'))
 /* Now with a dynamic one */
-const UniversalTab = universal(props => import(`./${props.tab}`))
+const UniversalTab = universal(props => import(`./${props.tab}`), {
+  minDelay: 750,
+  loading: <div>Carregando carai...</div>,
+  loadingTransition: false, // do not show the loading
+})
 
 export default class App extends React.Component {
   constructor(props) {
@@ -28,7 +32,11 @@ export default class App extends React.Component {
           <FooTab /> */}
         {/* this.state.selected === 'Bar' &&
           <BarTab /> */}
-        <UniversalTab tab={this.state.selected} />
+        {/* <UniversalTab
+          tab={this.state.selected}
+          isLoading={true} /> // force the loading*/}
+        <UniversalTab
+          tab={this.state.selected}/>
 
         <button onClick={ () => this.setState({ selected: 'Home' }) }>
           Home
